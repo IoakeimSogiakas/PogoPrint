@@ -1,0 +1,134 @@
+body {
+    background-color: #121212;
+    font-family: Arial, sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #1f1f1f;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+.upload-section, .files-section {
+    margin-top: 30px;
+}
+
+input[type="file"] {
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 8px 14px;
+    background-color: #3f8cff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5aa2ff;
+}
+
+button[disabled] {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+}
+
+.file-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #2b2b2b;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.btn {
+    padding: 6px 12px;
+    background-color: #4caf50;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+}
+
+.btn:hover {
+    background-color: #67c96b;
+}
+
+/* Danger / Cancel button */
+.btn-danger {
+    padding: 8px 14px;
+    background-color: #e53935;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #ff5c58;
+}
+
+/* Floating logs button */
+.floating-btn {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    padding: 10px 14px;
+    background:#333;
+    color:#fff;
+    border-radius:8px;
+    text-decoration:none;
+}
+
+/* Logs back button (reusable) */
+.floating-back {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #3f8cff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Progress bar fill gradient */
+.progress-fill {
+    height: 100%;
+    width:0%;
+    background: linear-gradient(90deg,#4caf50,#67c96b);
+    transition: width 0.6s;
+}
+
+/* in-page favicon preview (if you want an icon in the page header) */
+/* browsers won't change the browser chrome favicon shape — to make a round favicon you must edit the SVG file */
+.favicon-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: middle;
+}

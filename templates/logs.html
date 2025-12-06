@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Print Logs</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <style>
+        .floating-back {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3f8cff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .log-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1f1f1f;
+            border-radius: 10px;
+            overflow-y: auto;
+            max-height: 80vh;
+            color: #e0e0e0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="log-container">
+        <pre>{{ logs|join("\n") }}</pre>
+    </div>
+    <a href="/" class="floating-back">Back</a>
+</body>
+</html>

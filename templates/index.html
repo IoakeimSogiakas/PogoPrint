@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Plug'n'Print</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <script>
+        // initial printing boolean from server
+        let printing = {{ "true" if printing else "false" }};
+
+        function refreshProgress() {
+            fetch('/progress').then(r=>r.json()).then(data=>{
+                const pct = data.percent || 0;
+                const status = data.status || '';
+                document.getElementById("progress-text").innerText =
+                    `Progress: ${pct}%${status ? ' | ' + status : ''}`;
+                const bar = document.getElementById("progress-bar-fill");
+                if(bar) bar.style.width = pct + "%";
+
+                // If printing (server says true) or pct>0, lock UI
+                if(pct > 0 || printing === "true") {
+                    document.getElementById("refresh-btn").disabled = true;
+                    document.getElementById("upload-btn").disabled = true;
+                    printing = true;
+                }
+
+                if(pct < 100 && printing) {
+                    // keep polling while print is ongoing
+                    setTimeout(refreshProgress, 1000);
+                } else {
+                    // finished or not printing: re-enable
+                    document.getElementById("refresh-btn").disabled = false;
+                    document.getElementById("upload-btn").disabled = false;
+                    printing = false;
+                }
+            }).catch(()=>{
+                // retry after a short delay if the request fails
+                setTimeout(refreshProgress, 2000);
+            });
+        }
+
+        function confirmCancel() {
+            if (!confirm("Are you sure you want to CANCEL the current print? This cannot be undone.")) {
+                return false;
+            }
+            // if confirmed, navigate to cancel route
+            location.href = '/cancel';
+            return true;
+        }
+
+        window.onload = refreshProgress;
+    </script>
+    <style>
+      /* small inline styles for the progress bar area (keeps CSS file easier) */
+      .progress { background: #2b2b2b; border-radius: 6px; height: 18px; margin-top: 10px; overflow: hidden; }
+      .progress-fill { height: 100%; width:0%; background: linear-gradient(90deg,#4caf50,#67c96b); transition: width 0.6s; }
+      .floating-btn { position: fixed; bottom: 18px; right: 18px; padding: 10px 14px; background:#333; color:#fff; border-radius:8px; text-decoration:none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plug'n'Print</h1>
+
+        <section class="upload-section">
+            <h2>Upload G-code</h2>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required>
+                <button id="upload-btn" type="submit" {% if printing %}disabled{% endif %}>Upload</button>
+            </form>
+        </section>
+
+        <section class="files-section">
+            <h2>SD Card Files</h2>
+            {% if files %}
+                <ul class="file-list">
+                    {% for f in files %}
+                        <li>
+                            <span>{{ f }}</span>
+                            <a class="btn" href="/print?name={{ f }}">Print</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No files found on SD card.</p>
+            {% endif %}
+
+            <div style="margin-top:10px;">
+                <button id="refresh-btn" onclick="location.href='/refresh_sd'" {% if printing %}disabled{% endif %}>Refresh SD</button>
+            </div>
+        </section>
+
+        <div id="progress-area">
+            <div id="progress-text">Progress: {{ progress.percent }}%{% if progress.status %} | {{ progress.status }}{% endif %}</div>
+            <div class="progress"><div id="progress-bar-fill" class="progress-fill" style="width: {{ progress.percent }}%"></div></div>
+        </div>
+
+        <div style="margin-top:12px;">
+            {% if printing %}
+                <button class="btn-danger" onclick="confirmCancel()">Cancel Print</button>
+            {% else %}
+                <!-- hidden when not printing, keep layout stable -->
+                <span style="display:inline-block;height:36px;"></span>
+            {% endif %}
+        </div>
+
+        <a href="/logs" class="floating-btn">Logs</a>
+    </div>
+</body>
+</html>
